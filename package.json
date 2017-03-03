@@ -15,7 +15,7 @@
     "start": "npm run develop"
   },
   "peerDependencies": {
-    "ngwp": "~2.0.10"
+    "ngwp": "^2.0.12"
   },
   "devDependencies": {},
   "dependencies": {
