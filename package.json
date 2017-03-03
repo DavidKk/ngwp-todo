@@ -2,14 +2,14 @@
   "name": "ngwp-mobile",
   "version": "0.0.1",
   "license": "MIT",
-  "description": "[object Object]",
+  "description": "",
   "engines": {
     "node": ">= 6.2.2"
   },
   "scripts": {
-    "develop": "cross-env DEVELOP=1 ngwp run develop",
-    "product": "cross-env PRODUCT=1 ngwp run product",
-    "unitest": "cross-env PRODUCT=1 && cross-env UNITEST=1 ngwp run unitest",
+    "develop": "ngwp run develop",
+    "product": "ngwp run product",
+    "unitest": "ngwp run unitest",
     "release": "npm run unitest && npm run product",
     "test": "npm run unitest",
     "start": "npm run develop"
