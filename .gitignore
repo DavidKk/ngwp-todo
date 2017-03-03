@@ -1,21 +1,23 @@
-/logs
-/.temporary
-/.dist
+# Output folders
 /dist
+
+
+# Temporary folders
+.temporary
+.dist
+/vhosts
+
+
+# Logs
+/logs
+
+
+# Coverage directory used by tools like istanbul
 /coverage
 
 
 # Dependency folders
 node_modules
-npm-debug.log
-
-
-# NPM
-npm-shrinkwrap.json
-
-
-# YARN
-yarn.lock
 
 
 # Numerous always-ignore extensions
