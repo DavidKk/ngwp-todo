@@ -5,7 +5,7 @@
     "module": [
       {
         "domain": "example.com",
-        "entry": "index"
+        "entry": "./src/modules/index/index.js"
       },
       {
         "type": "static",

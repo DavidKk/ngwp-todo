@@ -9,7 +9,6 @@
   "scripts": {
     "standard": "standard --fix './src/**/*.js' './test/**/*.js' --parser babel-eslint",
     "nginx": "ngwp nginx",
-    "update": "npm run nginx",
     "develop": "ngwp run develop",
     "product": "ngwp run product",
     "e2e": "ngwp run e2e",
