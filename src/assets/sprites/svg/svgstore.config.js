@@ -5,7 +5,7 @@ const SvgNamespace = 'http://www.w3.org/1999/xlink'
 const SvgStorePluginNestID = 'webpack-svgstore-plugin'
 const __svg__ = {
   path: './src/assets/sprites/svg/**/*.svg',
-  name: 'assets/svgsprite.[hash].svg'
+  name: 'assets/svg/svgsprite.[hash].svg'
 }
 
 window.__SVG_SPRITE__ = SVGSpritesRequest(__svg__) || ''
