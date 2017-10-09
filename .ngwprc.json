@@ -1,0 +1,16 @@
+{
+  "publicPath": "//static.example.com/",
+  "nginx": {
+    "port": 50020,
+    "module": [
+      {
+        "domain": "example.com",
+        "entry": "index"
+      },
+      {
+        "type": "static",
+        "domain": "static.example.com"
+      }
+    ]
+  }
+}
