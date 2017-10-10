@@ -1,16 +1,18 @@
 {
+  "port": 8080,
   "publicPath": "//static.example.com/",
-  "nginx": {
-    "port": 50020,
-    "module": [
-      {
-        "domain": "example.com",
-        "entry": "./src/modules/index/index.js"
-      },
-      {
-        "type": "static",
-        "domain": "static.example.com"
-      }
-    ]
-  }
+  "variables": {
+    "process.env.myVars": "myValue",
+    "myGlobalVars": "myGlobalValue"
+  },
+  "modules": [
+    {
+      "domain": "example.com",
+      "entry": "./src/modules/index/index.js"
+    },
+    {
+      "type": "static",
+      "domain": "static.example.com"
+    }
+  ]
 }
