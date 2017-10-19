@@ -1,6 +1,6 @@
 {
   "port": 8080,
-  "publicPath": "./",
+  "publicPath": "/ngwp-todo/",
   "variables": {},
   "modules": [
     {
