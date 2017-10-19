@@ -1,0 +1,5 @@
+input(
+  ng-class='{ "new-todo": $ctrl.mode === "new", "edit": $ctrl.mode === "edit" }'
+  ng-model="text"
+  ng-blur="handleBlur()",
+  ng-keydown="handleSubmit($event)")

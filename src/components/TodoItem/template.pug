@@ -1,0 +1,22 @@
+li(ng-class="{\
+  completed: todo.completed,\
+  editing: $ctrl.editing,\
+}")
+  todo-text-input(
+    edit-todo
+    text="todo.text"
+    ng-if="$ctrl.editing === true"
+    on-save="handleSubmit",
+    auto-focus="true",
+    placeholder="What needs to be done?")
+
+  .view(ng-if="$ctrl.editing === false")
+    input.toggle(
+      ng-model="todo.completed"
+      type="checkbox",
+      checked="todo.completed",
+      ng-change="handleComplete(todo.completed)")
+
+    label(ng-dblclick="$ctrl.edit()") {{ todo.text }}
+
+    button.destroy(ng-click="actions.deleteTodo(todo.id)")

@@ -11,6 +11,8 @@ html(ng-app='index', lang='cn')
     meta(name='format-detection', content='date=no')
     meta(name='format-detection', content='address=no')
     meta(name='format-detection', content='email=no')
-    title Home
+    link(href= require('todomvc-app-css/index.css'), rel='stylesheet')
+    title Todo
+
   body
-    ui-view
+    .todoapp(ui-view)

@@ -1,10 +1,7 @@
 {
   "port": 8080,
-  "publicPath": "//static.example.com/",
-  "variables": {
-    "process.env.myVars": "myValue",
-    "myGlobalVars": "myGlobalValue"
-  },
+  "publicPath": "/",
+  "variables": {},
   "modules": [
     {
       "domain": "example.com",

@@ -1,0 +1,15 @@
+footer.footer
+  span.todo-count
+    strong {{ activeCount || 'No' }}
+    | &nbsp;{{ activeCount === 1 ? 'item' : 'items' }} left
+
+  ul.filters
+    li(ng-repeat="filter in $ctrl.tabs")
+      a(
+        ng-class="{ selected: filter.value === selectedFilter }",
+        style="cursor:pointer;",
+        ng-click="onShow(filter.value)") {{ filter.title }}
+
+  button.clear-completed(
+    ng-if="completedCount > 0"
+    ng-click="handleClearComplete()") Clear completed 

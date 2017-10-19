@@ -1,29 +1,46 @@
+// eslint-disable-next-line no-unused-vars
 import angular from 'angular'
-import { Home } from 'components/home'
 import uiRouter from 'angular-ui-router'
-import 'assets/styles/public.scss'
+import ngRedux from 'ng-redux'
+import ReduxThunk from 'redux-thunk'
+import { createLogger } from 'redux-logger'
+import { Inject, Module, Config } from '../../library/core'
+import Reducers from '../../reducers'
+import TodoContainer from '../../containers/Todo'
 
-export const Index = 'index'
-
-export default angular.module(Index, [
+@Config([
   uiRouter,
-  Home
+  ngRedux,
+  TodoContainer
 ])
-.config(function ($stateProvider, $urlRouterProvider) {
-  'ngInject'
+@Inject('$ngReduxProvider', '$stateProvider')
+class IndexConfig {
+  constructor ($ngReduxProvider, $stateProvider) {
+    this.mapRedux()
+    this.setRouter()
+  }
 
-  $stateProvider
-  .state('home', {
-    url: '',
-    template: '<home user="$resolve.user"></home>',
-    resolve: {
-      user ($q) {
-        'ngInject'
-
-        let deferred = $q.defer()
-        setTimeout(() => deferred.resolve({ name: 'David' }), 10)
-        return deferred.promise
-      }
+  @Inject('$ngReduxProvider')
+  mapRedux ($ngReduxProvider) {
+    let middleware = [ReduxThunk]
+    if (process.env.development) {
+      middleware = middleware.concat(createLogger())
     }
-  })
-})
+
+    $ngReduxProvider.createStoreWith(Reducers, middleware)
+  }
+
+  @Inject('$stateProvider')
+  setRouter ($stateProvider) {
+    $stateProvider
+    .state('todo', {
+      url: '',
+      template: '<todo-container></todo-container>'
+    })
+  }
+}
+
+@Module('index', [
+  IndexConfig
+])
+export default class {}
