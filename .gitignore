@@ -18,6 +18,8 @@
 
 # Dependency folders
 node_modules
+.npmrc
+.yarnrc
 
 
 # Numerous always-ignore extensions
