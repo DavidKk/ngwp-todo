@@ -1,5 +1,4 @@
-import { Inject, Directive } from '../../library/core'
-import { SHOW_ALL, SHOW_COMPLETED, SHOW_ACTIVE } from '../../constants/TodoFilters'
+import { Directive } from '../../library/core'
 import TodoTextInput from '../TodoTextInput'
 import Template from './template.pug'
 
@@ -7,7 +6,7 @@ import Template from './template.pug'
   scope: {
     addTodo: '=?addTodo'
   },
-  template: Template(),
+  template: Template()
 }, [
   TodoTextInput
 ])

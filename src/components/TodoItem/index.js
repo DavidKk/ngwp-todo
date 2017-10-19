@@ -4,9 +4,9 @@ import Template from './template.pug'
 @Directive('todo-item', {
   scope: {
     todo: '=todo',
-    actions: '=actions',
+    actions: '=actions'
   },
-  template: Template(),
+  template: Template()
 })
 @Inject('$scope')
 export default class TodoItem {

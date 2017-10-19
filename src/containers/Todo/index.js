@@ -1,5 +1,3 @@
-import assign from 'lodash/assign'
-import isEqual from 'lodash/isEqual'
 import ngRedux from 'ng-redux'
 import { Inject, Directive } from '../../library/core'
 import { Container } from '../../library/container'

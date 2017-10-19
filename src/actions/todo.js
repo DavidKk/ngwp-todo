@@ -1,5 +1,5 @@
 import * as types from '../constants/ActionTypes'
-import { Inject, Service } from '../library/core'
+import { Service } from '../library/core'
 
 @Service('$todo')
 export default class {

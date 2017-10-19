@@ -1,3 +1,7 @@
+/* eslint max-nested-callbacks: off */
+/* eslint no-unused-expressions: off */
+/* eslint-env mocha */
+
 import { expect } from 'chai'
 import todos from 'reducers/todos'
 import * as types from 'constants/ActionTypes'
