@@ -21,6 +21,7 @@
     "e2e": "ngwp run e2e",
     "coverage": "rimraf ./coverage && cross-env COVERAGE=1 ngwp run e2e",
     "release": "npm run e2e && npm run product",
+    "test": "npm run e2e",
     "start": "npm run develop"
   },
   "dependencies": {
