@@ -8,7 +8,7 @@
   },
   "lint-staged": {
     "*.js": [
-      "npm run lint",
+      "npm run standard",
       "git add"
     ]
   },
@@ -37,6 +37,7 @@
     "angular-mocks": "^1.6.3",
     "babel-eslint": "^8.0.1",
     "cross-env": "^5.0.5",
+    "husky": "^0.14.3",
     "lint-staged": "^4.3.0",
     "ngwp": "^3.0.0-beta",
     "redux-logger": "^3.0.6",
