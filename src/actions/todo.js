@@ -16,7 +16,6 @@ export default class {
   }
 
   completeTodo (id, completed) {
-    console.log(completed)
     return { type: types.COMPLETE_TODO, id, completed }
   }
 
