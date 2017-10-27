@@ -20,6 +20,7 @@ export function Inject (...dependencies) {
 
       return $inject.concat((...allDependencies) => {
         let fnDeps = inject(dependencies, $inject, allDependencies)
+
         class AngularModule extends Module {
           static $inject = $inject
           static $dependencies = allDependencies
@@ -29,19 +30,28 @@ export function Inject (...dependencies) {
       })
     }
 
+    let fn = descriptor.value
+    if (key === '$get') {
+      let newFn = dependencies.concat(fn)
+      newFn.$inject = dependencies
+      descriptor.value = newFn
+      return descriptor
+    }
+
     let $inject = Module.constructor.$inject || []
     $inject = $inject.concat(dependencies)
     $inject = uniq($inject)
     Module.constructor.$inject = $inject
 
-    let fn = descriptor.value
-    descriptor.value = function (...args) {
+    let newFn = function (...args) {
       let fnArgs = annotate(fn)
       let fnDeps = inject(dependencies, this.constructor.$inject, this.constructor.$dependencies)
       args = assign(new Array(fnArgs.length - fnDeps.length), args)
       return fn.call(this, ...args, ...fnDeps)
     }
 
+    newFn.$inject = dependencies
+    descriptor.value = newFn
     return descriptor
   }
 }
@@ -77,10 +87,25 @@ export function Provider (name, dependencies) {
 
   return function (Module) {
     let moduleName = shortid.generate()
+    if (isArray(Module)) {
+      Module = Module.unshift()
+    }
+
+    let $inject = Module.$inject || []
+    let $getInject = Module.prototype.$get.$inject || []
+    let Provider = $inject.concat((...allDependencies) => {
+      class AngularModule extends Module {
+        static $inject = $inject
+        static $dependencies = allDependencies
+        $get = $getInject.concat(Module.prototype.$get)
+      }
+
+      return new AngularModule()
+    })
 
     return angular
     .module(moduleName, dependencies || [])
-    .provider(name, isFunction(Module) ? wrap(Module) : Module)
+    .provider(name, Provider)
     .name
   }
 }
