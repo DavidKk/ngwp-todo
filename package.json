@@ -1,6 +1,6 @@
 {
   "name": "ngwp-todo",
-  "version": "3.0.0-beta",
+  "version": "3.0.0",
   "license": "MIT",
   "description": "Angular 1.x.x scaffold with ngwp",
   "engines": {
