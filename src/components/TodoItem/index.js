@@ -19,7 +19,7 @@ export default class TodoItem {
   }
 
   @Inject('$scope')
-  complete (isCompleted, $scope) {
+  complete ($scope, isCompleted) {
     $scope.actions.completeTodo($scope.todo.id, isCompleted)
   }
 
@@ -28,7 +28,7 @@ export default class TodoItem {
   }
 
   @Inject('$scope')
-  submit (text, $scope) {
+  submit ($scope, text) {
     text.length === 0
     ? $scope.actions.deleteTodo($scope.todo.id)
     : $scope.actions.editTodo($scope.todo.id, text)

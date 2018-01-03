@@ -1,10 +1,24 @@
 {
+  "name": "Ngwp Todo",
   "port": 8080,
-  "publicPath": "/ngwp-todo/",
-  "variables": {},
+  "publicPath": "/",
+  "variables": {
+    "xxx_token": "userToken"
+  },
   "modules": [
     {
       "domain": "example.com",
+      "entry": "./src/modules/index/index.js"
+    },
+    {
+      "domain": "https.domain.com",
+      "entry": "./src/modules/index/index.js",
+      "useHttps": true,
+      "certFile": "certs/my.pem",
+      "certKey": "certs/my.key"
+    },
+    {
+      "domain": ["a.domain.com", "b.domain.com"],
       "entry": "./src/modules/index/index.js"
     },
     {

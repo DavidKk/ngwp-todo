@@ -1,6 +1,5 @@
 import map from 'lodash/map'
 import uniq from 'lodash/uniq'
-import assign from 'lodash/assign'
 import indexOf from 'lodash/indexOf'
 import isArray from 'lodash/isArray'
 import isObject from 'lodash/isObject'
@@ -9,7 +8,6 @@ import isFunction from 'lodash/isFunction'
 import defaults from 'lodash/defaults'
 import angular from 'angular'
 import shortid from 'shortid'
-import { annotate } from '../share/utils'
 
 export function Inject (...dependencies) {
   return function (Module, key, descriptor) {
@@ -18,7 +16,7 @@ export function Inject (...dependencies) {
       $inject = $inject.concat(dependencies)
       $inject = uniq($inject)
 
-      return $inject.concat((...allDependencies) => {
+      let Wrapper = (...allDependencies) => {
         let fnDeps = inject(dependencies, $inject, allDependencies)
 
         class AngularModule extends Module {
@@ -27,7 +25,12 @@ export function Inject (...dependencies) {
         }
 
         return new AngularModule(...fnDeps)
-      })
+      }
+
+      let moduleName = camelModuleName(Module)
+      Wrapper.$name = moduleName
+
+      return $inject.concat(Wrapper)
     }
 
     let fn = descriptor.value
@@ -44,10 +47,9 @@ export function Inject (...dependencies) {
     Module.constructor.$inject = $inject
 
     let newFn = function (...args) {
-      let fnArgs = annotate(fn)
-      let fnDeps = inject(dependencies, this.constructor.$inject, this.constructor.$dependencies)
-      args = assign(new Array(fnArgs.length - fnDeps.length), args)
-      return fn.call(this, ...args, ...fnDeps)
+      let constructor = this.constructor
+      let fnDeps = inject(dependencies, constructor.$inject, constructor.$dependencies)
+      return fn.call(this, ...fnDeps, ...args)
     }
 
     newFn.$inject = dependencies
@@ -63,20 +65,20 @@ export function Module (moduleName, dependencies) {
 
   return function (Module) {
     return angular
-    .module(moduleName, dependencies || [])
-    .run(isFunction(Module) ? wrap(Module) : Module)
-    .name
+      .module(moduleName, dependencies || [])
+      .run(isFunction(Module) ? wrap(Module) : Module)
+      .name
   }
 }
 
 export function Config (dependencies) {
   return function (Module) {
-    let moduleName = shortid.generate()
+    let moduleName = camelModuleName(Module)
 
     return angular
-    .module(moduleName, dependencies || [])
-    .config(isFunction(Module) ? wrap(Module) : Module)
-    .name
+      .module(moduleName, dependencies || [])
+      .config(isFunction(Module) ? wrap(Module) : Module)
+      .name
   }
 }
 
@@ -86,27 +88,31 @@ export function Provider (name, dependencies) {
   }
 
   return function (Module) {
-    let moduleName = shortid.generate()
+    let moduleName = camelModuleName(Module)
     if (isArray(Module)) {
       Module = Module.unshift()
     }
 
     let $inject = Module.$inject || []
-    let $getInject = Module.prototype.$get.$inject || []
+    let $getModule = Module.$get || Module.prototype.$get || function () {}
+    let $getInject = $getModule.$inject || []
+
     let Provider = $inject.concat((...allDependencies) => {
       class AngularModule extends Module {
+        static $name = moduleName
         static $inject = $inject
         static $dependencies = allDependencies
-        $get = $getInject.concat(Module.prototype.$get)
+        static toString = () => AngularModule.$name
+        $get = isArray($getModule) ? $getModule : $getInject.concat(wrap($getModule))
       }
 
       return new AngularModule()
     })
 
     return angular
-    .module(moduleName, dependencies || [])
-    .provider(name, Provider)
-    .name
+      .module(moduleName, dependencies || [])
+      .provider(name, Provider)
+      .name
   }
 }
 
@@ -116,12 +122,12 @@ export function Factory (name, dependencies) {
   }
 
   return function (Module) {
-    let moduleName = shortid.generate()
+    let moduleName = camelModuleName(Module)
 
     return angular
-    .module(moduleName, dependencies || [])
-    .factory(name, isFunction(Module) ? wrap(Module) : Module)
-    .name
+      .module(moduleName, dependencies || [])
+      .factory(name, isFunction(Module) ? wrap(Module) : Module)
+      .name
   }
 }
 
@@ -131,12 +137,12 @@ export function Service (name, dependencies) {
   }
 
   return function (Module) {
-    let moduleName = shortid.generate()
+    let moduleName = camelModuleName(Module)
 
     return angular
-    .module(moduleName, dependencies || [])
-    .service(name, isFunction(Module) ? wrap(Module) : Module)
-    .name
+      .module(moduleName, dependencies || [])
+      .service(name, isFunction(Module) ? wrap(Module) : Module)
+      .name
   }
 }
 
@@ -146,12 +152,12 @@ export function Filter (name, dependencies) {
   }
 
   return function (Module) {
-    let moduleName = shortid.generate()
+    let moduleName = camelModuleName(Module)
 
     return angular
-    .module(moduleName, dependencies || [])
-    .filter(name, isFunction(Module) ? wrap(Module) : Module)
-    .name
+      .module(moduleName, dependencies || [])
+      .filter(name, isFunction(Module) ? wrap(Module) : Module)
+      .name
   }
 }
 
@@ -165,39 +171,63 @@ export function Directive (selector, module = {}, dependencies) {
   selector = selector.charAt(0).toLowerCase() + selector.substr(1)
 
   return function (Directive) {
-    let moduleName = shortid.generate()
+    let moduleName = camelModuleName(Directive)
     let fn = module.pop()
 
     let component = function (...args) {
       let options = fn(...args)
 
-      return defaults(options, {
+      /**
+       * scope 为 false
+       * 为导致 controllerAs 继承父中的 scope 属性
+       * 默认创建一个新的 scope
+       */
+      options = defaults(options, {
         replace: true,
+        scope: true,
         restrict: 'EA',
         controllerAs: '$ctrl',
-        controller: Directive
+        controller: isFunction(Directive) ? Inject()(Directive) : Directive
       })
+
+      let noConflit = options.link
+      options.link = function ($scope, $element, $attrs, $ctrl) {
+        let ctrlName = options.controllerAs || '$ctrl'
+        $scope[ctrlName] = $ctrl
+
+        if (isFunction(noConflit)) {
+          return noConflit.apply(this, arguments)
+        }
+      }
+
+      return options
     }
 
     module.push(component)
 
     return angular
-    .module(moduleName, dependencies || [])
-    .directive(selector, module)
-    .name
+      .module(moduleName, dependencies || [])
+      .directive(selector, module)
+      .name
   }
 }
 
 function wrap (Module) {
+  let moduleName = camelModuleName(Module)
   let $inject = Module.$inject || []
-  return $inject.concat((...allDependencies) => {
+
+  let Wrapper = (...allDependencies) => {
     class AngularModule extends Module {
       static $inject = $inject
       static $dependencies = allDependencies
     }
 
     return new AngularModule()
-  })
+  }
+
+  Wrapper.$name = moduleName
+
+  return $inject.concat(Wrapper)
 }
 
 function inject (requires, names, dependencies) {
@@ -209,4 +239,22 @@ function inject (requires, names, dependencies) {
 
     return dependencies[index]
   })
+}
+
+function camelModuleName (Module) {
+  if (process.env.production) {
+    return shortid.generate()
+  }
+
+  if (isArray(Module)) {
+    Module = Module.slice(-1)
+    Module = Module[0]
+  }
+
+  let name = Module.$name || Module.name || '_default'
+  if (name === '_default') {
+    return shortid.generate()
+  }
+
+  return name.substr(0, 1).toUpperCase() + name.substr(1) + '_' + shortid.generate()
 }

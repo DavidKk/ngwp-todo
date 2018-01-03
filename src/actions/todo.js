@@ -2,7 +2,7 @@ import * as types from '../constants/ActionTypes'
 import { Service } from '../library/core'
 
 @Service('$todo')
-export default class {
+export default class Todo {
   addTodo (text) {
     return { type: types.ADD_TODO, text }
   }

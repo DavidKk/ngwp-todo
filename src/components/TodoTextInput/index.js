@@ -34,7 +34,7 @@ export default class Header {
   }
 
   @Inject('$scope')
-  save (text, $scope) {
+  save ($scope, text) {
     $scope.onSave(text)
 
     if (this.mode === 'new') {

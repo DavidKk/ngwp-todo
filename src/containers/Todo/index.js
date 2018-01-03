@@ -39,7 +39,7 @@ export default class TodoContainer extends Container {
   }
 
   @Inject('$scope')
-  componentWillReceiveState (nextState, $scope) {
+  componentWillReceiveState ($scope, nextState) {
     $scope.todos = nextState.todos
   }
 }
