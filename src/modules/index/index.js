@@ -7,6 +7,7 @@ import { createLogger } from 'redux-logger'
 import { Inject, Module, Config } from '../../library/core'
 import Reducers from '../../reducers'
 import TodoContainer from '../../containers/Todo'
+import 'todomvc-app-css/index.css'
 
 @Config([
   uiRouter,
