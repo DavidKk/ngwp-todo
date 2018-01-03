@@ -8,25 +8,27 @@
   },
   "lint-staged": {
     "*.js": [
-      "npm run standard",
+      "npm run lint",
       "git add"
     ]
   },
   "scripts": {
     "precommit": "lint-staged",
-    "standard": "standard --fix './src/**/*.js' './test/**/*.js' --parser babel-eslint",
+    "yamllint": "yamllint .travis.yml",
+    "eslint": "eslint --config .eslintrc.js --ext .js --fix './src/**/*.js' './test/**/*.js'",
+    "lint": "npm run yamllint && npm run eslint",
     "nginx": "ngwp nginx",
     "develop": "ngwp run develop",
     "product": "ngwp run product",
     "e2e": "ngwp run e2e",
     "coverage": "rimraf ./coverage && cross-env COVERAGE=1 ngwp run e2e",
-    "release": "npm run e2e && npm run product",
+    "release": "npm run lint && npm run e2e && npm run product",
     "test": "npm run e2e",
     "start": "npm run develop"
   },
   "dependencies": {
+    "@uirouter/angularjs": "^1.0.12",
     "angular": "1.6.3",
-    "angular-ui-router": "^0.4.3",
     "lodash": "^4.14.0",
     "ng-redux": "^3.5.2",
     "redux-thunk": "^2.2.0",
@@ -37,11 +39,18 @@
     "angular-mocks": "^1.6.3",
     "babel-eslint": "^8.0.1",
     "cross-env": "^5.0.5",
+    "eslint": "^4.14.0",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
     "husky": "^0.14.3",
     "lint-staged": "^4.3.0",
-    "ngwp": "^3.0.0-beta",
+    "ngwp": "^3.0.0",
     "redux-logger": "^3.0.6",
     "rimraf": "^2.6.2",
-    "standard": "^10.0.3"
+    "standard": "^10.0.3",
+    "yaml-lint": "^1.0.0"
   }
 }

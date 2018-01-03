@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import angular from 'angular'
-import uiRouter from 'angular-ui-router'
+import uiRouter from '@uirouter/angularjs'
 import ngRedux from 'ng-redux'
 import ReduxThunk from 'redux-thunk'
 import { createLogger } from 'redux-logger'
@@ -33,10 +33,10 @@ class IndexConfig {
   @Inject('$stateProvider')
   setRouter ($stateProvider) {
     $stateProvider
-    .state('todo', {
-      url: '',
-      template: '<todo-container></todo-container>'
-    })
+      .state('todo', {
+        url: '',
+        template: '<todo-container></todo-container>'
+      })
   }
 }
 

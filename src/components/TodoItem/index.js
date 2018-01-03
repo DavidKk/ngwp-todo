@@ -30,8 +30,8 @@ export default class TodoItem {
   @Inject('$scope')
   submit ($scope, text) {
     text.length === 0
-    ? $scope.actions.deleteTodo($scope.todo.id)
-    : $scope.actions.editTodo($scope.todo.id, text)
+      ? $scope.actions.deleteTodo($scope.todo.id)
+      : $scope.actions.editTodo($scope.todo.id, text)
 
     this.edit(false)
   }
