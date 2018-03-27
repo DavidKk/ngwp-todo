@@ -12,6 +12,9 @@
       "git add"
     ]
   },
+  "peerDependencies": {
+    "ngwp": "^3.0.0"    
+  },
   "scripts": {
     "precommit": "lint-staged",
     "yamllint": "yamllint .travis.yml",
@@ -51,10 +54,8 @@
     "eslint-plugin-standard": "^3.0.1",
     "husky": "^0.14.3",
     "lint-staged": "^4.3.0",
-    "ngwp": "^3.0.0",
     "redux-logger": "^3.0.6",
     "rimraf": "^2.6.2",
-    "standard": "^10.0.3",
     "yaml-lint": "^1.0.0"
   }
 }
